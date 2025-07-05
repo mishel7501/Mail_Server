@@ -2,6 +2,9 @@
 *.env
 mailserver.env
 
+# Account credentials
+config/postfix-accounts.cf
+
 # Logs
 logs/
 *.log
