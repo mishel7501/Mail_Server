@@ -1,0 +1,42 @@
+services:
+  mailserver:
+    image: ghcr.io/docker-mailserver/docker-mailserver:latest
+    container_name: mailserver
+    # Provide the FQDN of your mail server here (Your DNS MX record should point to this value)
+    hostname: mail.ananas.guru
+    env_file: mailserver.env
+    # More information about the mail-server ports:
+    # https://docker-mailserver.github.io/docker-mailserver/latest/config/security/understanding-the-ports/
+    ports:
+      - "25:25"    # SMTP  (explicit TLS => STARTTLS, Authentication is DISABLED => use port 465/587 instead)
+      - "143:143"  # IMAP4 (explicit TLS => STARTTLS)
+      - "465:465"  # ESMTP (implicit TLS)
+      - "587:587"  # ESMTP (explicit TLS => STARTTLS)
+      - "993:993"  # IMAP4 (implicit TLS)
+    volumes:
+      - ./data/mail:/var/mail
+      - ./data/mail-state:/var/mail-state
+      - ./logs:/var/log/mail
+      - /etc/letsencrypt/live/ananas.guru-0001:/etc/letsencrypt/live/ananas.guru-0001
+      - /etc/letsencrypt/archive:/etc/letsencrypt/archive
+      - /opt/mailserver/config:/tmp/docker-mailserver
+    restart: unless-stopped
+    stop_grace_period: 1m
+    # Uncomment if using `ENABLE_FAIL2BAN=1`:
+    cap_add:
+      - NET_ADMIN
+    networks:
+      mail_network:
+        ipv4_address: 172.23.0.10  # Фиксированный IP в Docker-сети
+    healthcheck:
+      test: "ss --listening --tcp | grep -P 'LISTEN.+:smtp' || exit 1"
+      timeout: 3s
+      retries: 0
+      
+networks:
+  mail_network:
+    name: mail_network
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.23.0.0/24

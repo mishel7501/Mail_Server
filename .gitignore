@@ -1,0 +1,20 @@
+# Environment files
+*.env
+mailserver.env
+
+# Logs
+logs/
+*.log
+*.log.*
+*.gz
+
+# Mail data
+data/mail/
+data/mail-state/
+
+# OpenDKIM keys
+config/opendkim/keys/
+
+# Temporary files
+*.tmp
+*.bak

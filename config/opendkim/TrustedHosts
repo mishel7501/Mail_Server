@@ -1,0 +1,9 @@
+127.0.0.1
+localhost
+::1
+
+# Docker internal subnet
+172.23.0.0/24
+
+# Your domain
+ananas.guru

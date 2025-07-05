@@ -1,0 +1,1 @@
+mail._domainkey.ananas.guru ananas.guru:mail:/etc/opendkim/keys/ananas.guru/mail.private
